@@ -1,5 +1,11 @@
 #include <iostream>
 #include <stdio.h>
+#include <string_view>
+
+// an std::string can be taken as a string_view
+// which is as cheap as a reference. the other way around,
+// taking an std::string, requires a full copy to the std::string
+void output_string(std::string_view str) { std::cout << str << '\n'; }
 
 int main() {
 
@@ -34,6 +40,31 @@ int main() {
   char c_str_cpp[]{"Hello World"};
 
   printf("First: %s\nSecond: %s\n", c_str, c_str_cpp);
+
+  /*
+   * Here we are
+   * string views are no copy on init
+   * idiomatic String::from???
+   * idk lol
+   */
+
+  std::string_view my_str_view{"Hello World from str_view"};
+
+  std::cout << my_str_view << '\n';
+
+  /*
+   * Alright, saw the word owner
+   * in the book and felt all of my neurons
+   * start firing. string_view is a viewer
+   * into a string, which is the owner
+   * rustpilled c++ book
+   */
+
+  std::string to_print{"This is my string!!"};
+
+  // I do need to know the mechanism behind
+  // this auto-cast
+  output_string(to_print);
 
   return 0;
 }

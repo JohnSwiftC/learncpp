@@ -61,5 +61,17 @@ int main()
 
     std::cout << bad_ref << " and under is " << some_short << '\n';
 
+    // neuron alert with lifetimes
+    // if a const lvalue ref is inited
+    // with a temp value, like an rvalue,
+    // the ref will extend the lifetime
+    // of the temporary value to that of the
+    // reference
+
+    // Completely valid, 5 would normally be dropped
+    // and leave lifetime as a dangling ref, however
+    // c++ wont let me footgun myself that bad
+    const int &lifetime{5};
+
     return 0;
 }

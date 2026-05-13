@@ -10,6 +10,12 @@
 struct SomeStruct {
   int value{};
   std::string name{};
+
+  SomeStruct(int v) : value{v}, name{"unnamed"} {}
+  SomeStruct(int v, std::string s) : value{v}, name{s} {}
+  // SomeStruct(int v = 0, std::string s = "unnamed") : value{v}, name{s} {}
+
+  SomeStruct() = default;
 };
 
 int main() {
@@ -18,21 +24,20 @@ int main() {
 
   std::cout << s.name << "\n";
 
-  // in c++ 20 and onwards, we get rust like
-  // named initializers
-
-  SomeStruct nicer{.value = 10, .name = "Rick"};
-
-  std::cout << nicer.name << '\n';
-
   // direct init with another struct
 
-  SomeStruct direct(nicer);
+  SomeStruct direct(s);
 
   // copy is normal
   // not preffered
 
   SomeStruct copy = s;
+
+  // using the default constructor
+
+  SomeStruct def{};
+
+  std::cout << def.value << def.name << '\n';
 
   return 0;
 }

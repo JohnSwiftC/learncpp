@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string_view>
 
 // Slightly different than C, this is preffered
 // a normal C struct does not need the list
@@ -12,7 +13,11 @@ struct SomeStruct {
   std::string name{};
 
   SomeStruct(int v) : value{v}, name{"unnamed"} {}
-  SomeStruct(int v, std::string s) : value{v}, name{s} {}
+
+  // Important to be using string_view here
+  // to avoid the copy when the constructor is called
+  // #couldbesolvedviacopyorclonetrait
+  SomeStruct(int v, std::string_view s) : value{v}, name{s} {}
   // SomeStruct(int v = 0, std::string s = "unnamed") : value{v}, name{s} {}
 
   SomeStruct() = default;

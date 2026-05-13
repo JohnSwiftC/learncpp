@@ -20,6 +20,10 @@ struct SomeStruct {
   SomeStruct(int v, std::string_view s) : value{v}, name{s} {}
   // SomeStruct(int v = 0, std::string s = "unnamed") : value{v}, name{s} {}
 
+  // Delegating
+
+  SomeStruct(std::string_view s) : SomeStruct{67, s} {}
+
   SomeStruct() = default;
 };
 
@@ -43,6 +47,12 @@ int main() {
   SomeStruct def{};
 
   std::cout << def.value << def.name << '\n';
+
+  // Using delegated
+
+  SomeStruct dele{"Hello, World!"};
+
+  std::cout << dele.value << '\n';
 
   return 0;
 }

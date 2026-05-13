@@ -73,5 +73,15 @@ int main()
     // c++ wont let me footgun myself that bad
     const int &lifetime{5};
 
+    int some{1};
+
+    // ++some is an lvalue
+    int &pre_is_lvalue{++some};
+
+    // while some++ is an rvalue,
+    // making this illegal
+
+    // int &post { some++ };
+
     return 0;
 }

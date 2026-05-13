@@ -49,6 +49,17 @@ bool greater_than<int>(const int &a, const int &b)
     return a > b;
 }
 
+// Another useful feature is non-types in these
+// i actually like these coming from rust
+// im not sure if we have a good equivalent
+//
+
+template <int N>
+void print()
+{
+    std::cout << N << '\n';
+}
+
 int main()
 {
 

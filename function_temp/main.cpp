@@ -38,6 +38,17 @@ const T &max(const T &a, const T &b)
     return b;
 }
 
+// These can only be declared manually
+
+template <typename T>
+bool greater_than(const T &, const T &);
+
+template <>
+bool greater_than<int>(const int &a, const int &b)
+{
+    return a > b;
+}
+
 int main()
 {
 
@@ -54,6 +65,8 @@ int main()
     std::cout << max(a, b) << '\n';
 
     // these can also be treated like generics
+    // compiler only makes functions of the type
+    // for which the template is actually used
 
     std::cout << max<int>(a, b) << '\n';
 

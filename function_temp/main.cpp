@@ -11,13 +11,51 @@ int evilFunction() = delete;
 // arguments will NOT be deleted
 void precedent(int x) {};
 
+// functions in c++ can have defaults
+double tax(double value, double rate = 10.0)
+{
+    return value * rate;
+}
+
 template <typename T>
 void precedent(T x) = delete;
+
+// a simple max function
+// im sure there is more here
+// maybe similar to rust generics
+// where i can enforce the generic type
+// implementing some sort of traitish
+// thing
+
+template <typename T>
+const T &max(const T &a, const T &b)
+{
+    if (a > b)
+    {
+        return a;
+    }
+
+    return b;
+}
 
 int main()
 {
 
     // illegal evilFunction();
+
+    std::cout << tax(10.0) << tax(10.0, 5.0) << '\n';
+
+    std::cout << max(2, 3) << '\n';
+    std::cout << max(10.0, 15.0) << '\n';
+
+    int a{12};
+    int b{13};
+
+    std::cout << max(a, b) << '\n';
+
+    // these can also be treated like generics
+
+    std::cout << max<int>(a, b) << '\n';
 
     return 0;
 }

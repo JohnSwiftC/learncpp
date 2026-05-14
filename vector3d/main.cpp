@@ -10,6 +10,17 @@ struct Vector3D {
 
   Vector3D(double x, double y, double z) : m_x{x}, m_y{y}, m_z{z} {}
 
+  // Copy constructor
+  // Called whenever the struct is copied
+  // for example, in function calls by value
+  Vector3D(const Vector3D &vector3d)
+      : m_x{vector3d.m_x}, m_y{vector3d.m_y}, m_z{vector3d.m_z} {}
+
+  // We can also delete the copy constructor to prevent
+  // copy
+
+  // Vector3D(const Vector3D&) = delete;
+
   constexpr void add(const Vector3D &other) {
     m_x += other.m_x;
     m_y += other.m_y;

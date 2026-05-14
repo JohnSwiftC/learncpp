@@ -8,16 +8,24 @@ struct Vector3D {
 
   Vector3D() = default;
 
-  Vector3D(double x, double y, double z) : m_x{x}, m_y{y}, m_z{z} {}
+  // Explicit here means that this cannot be used
+  // as a conversion constructor, must be explicitly used
+  // as a constructor and nothing else
+  explicit Vector3D(double x, double y, double z) : m_x{x}, m_y{y}, m_z{z} {}
 
   // Copy constructor
   // Called whenever the struct is copied
   // for example, in function calls by value
+  //
+  // Copy constructors should NOT have side effects.
+  // Primarily due to copy ellision, because the compiler
+  // is free to optimize away copies, so we cannot be sure
+  // when the constructor will actually be called
   Vector3D(const Vector3D &vector3d)
       : m_x{vector3d.m_x}, m_y{vector3d.m_y}, m_z{vector3d.m_z} {}
 
   // We can also delete the copy constructor to prevent
-  // copy
+  // copying
 
   // Vector3D(const Vector3D&) = delete;
 
@@ -48,8 +56,8 @@ int main() {
 
   Vector3D vec{};
 
-  vec.add({3, 2, 1});
-  vec.sub({0.5, 0.5, 0.5});
+  vec.add(Vector3D{3, 2, 1});
+  vec.sub(Vector3D{0.5, 0.5, 0.5});
 
   std::cout << vec << '\n';
 

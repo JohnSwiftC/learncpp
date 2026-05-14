@@ -11,7 +11,8 @@ struct Vector3D {
   // Explicit here means that this cannot be used
   // as a conversion constructor, must be explicitly used
   // as a constructor and nothing else
-  explicit Vector3D(double x, double y, double z) : m_x{x}, m_y{y}, m_z{z} {}
+  explicit constexpr Vector3D(double x, double y, double z)
+      : m_x{x}, m_y{y}, m_z{z} {}
 
   // Copy constructor
   // Called whenever the struct is copied
@@ -29,20 +30,28 @@ struct Vector3D {
 
   // Vector3D(const Vector3D&) = delete;
 
-  constexpr void add(const Vector3D &other) {
+  constexpr Vector3D &add(const Vector3D &other) {
     m_x += other.m_x;
     m_y += other.m_y;
     m_z += other.m_z;
+
+    return *this;
   }
 
-  constexpr void sub(const Vector3D &other) {
+  constexpr Vector3D &sub(const Vector3D &other) {
     m_x -= other.m_x;
     m_y -= other.m_y;
     m_z -= other.m_z;
+
+    return *this;
   }
 
   std::string to_string() const {
-    return "(" + std::to_string(m_x) + ", " + std::to_string(m_y) + ", " +
+
+    // This is a pointer to the implicit object in the function call,
+    // not required but useful
+
+    return "(" + std::to_string(this->m_x) + ", " + std::to_string(m_y) + ", " +
            std::to_string(m_z) + ")";
   }
 };
@@ -56,8 +65,9 @@ int main() {
 
   Vector3D vec{};
 
-  vec.add(Vector3D{3, 2, 1});
-  vec.sub(Vector3D{0.5, 0.5, 0.5});
+  // Chaining, class functions return a ref to the object so methods can be
+  // chained
+  vec.add(Vector3D{3, 2, 1}).sub(Vector3D{0.5, 0.5, 0.5});
 
   std::cout << vec << '\n';
 

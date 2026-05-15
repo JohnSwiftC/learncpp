@@ -54,6 +54,10 @@ struct Vector3D {
     return "(" + std::to_string(this->m_x) + ", " + std::to_string(m_y) + ", " +
            std::to_string(m_z) + ")";
   }
+
+  // A destructor, calls whenever the object
+  // is, well, destroyed
+  ~Vector3D() { std::cout << "Destructed1!!\n"; }
 };
 
 std::ostream &operator<<(std::ostream &out, const Vector3D &in) {
@@ -63,13 +67,19 @@ std::ostream &operator<<(std::ostream &out, const Vector3D &in) {
 
 int main() {
 
-  Vector3D vec{};
+  // Vector3D vec{};
 
   // Chaining, class functions return a ref to the object so methods can be
   // chained
-  vec.add(Vector3D{3, 2, 1}).sub(Vector3D{0.5, 0.5, 0.5});
+  // vec.add(Vector3D{3, 2, 1}).sub(Vector3D{0.5, 0.5, 0.5});
 
-  std::cout << vec << '\n';
+  // std::cout << vec << '\n';
+
+  Vector3D vec{};
+  // Here you will actually notice
+  // that the destructor is called twice
+  // because the temporary object!
+  vec.add(Vector3D{0.5, 0.5, 0.5});
 
   return 0;
 }

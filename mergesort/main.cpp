@@ -48,14 +48,28 @@ std::vector<T> merge(const std::vector<T> &first,
   return result;
 }
 
+template <typename T> std::vector<T> merge_sort(const std::vector<T> &vec) {
+  if (vec.size() == 1) {
+    return vec;
+  }
+
+  auto half = vec.size() / 2;
+  std::vector<T> first = std::vector<T>(vec.begin(), vec.begin() + half);
+  std::vector<T> second = std::vector<T>(vec.begin() + half, vec.end());
+
+  std::vector<T> first_sorted = merge_sort(first);
+  std::vector<T> second_sorted = merge_sort(second);
+
+  return merge(first_sorted, second_sorted);
+}
+
 int main() {
-  std::vector<int> first{1, 3, 3, 18, 20};
-  std::vector<int> second{-1, 4, 19};
+  std::vector<int> int_unsorted{0, -4, 20, 13, 62, -18, 999, 10, -12};
 
-  std::vector<int> merged = merge(first, second);
+  std::vector<int> int_sorted = merge_sort(int_unsorted);
 
-  for (auto &n : merged) {
-    std::cout << n << " ";
+  for (int &val : int_sorted) {
+    std::cout << val << " ";
   }
 
   return 0;

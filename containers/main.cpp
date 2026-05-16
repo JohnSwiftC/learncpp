@@ -22,6 +22,28 @@ template <typename T> void display_vector(const std::vector<T> &vec) {
   }
 }
 
+template <typename T> class VectorView {
+private:
+  T &internal;
+
+public:
+  // Creating a class member type
+  using Index = std::ptrdiff_t;
+
+  // overload [] operator
+  // this also uses the size_type, which is normally
+  // in a container class, to cast our index type into
+  // what it expects
+  constexpr T &operator[](Index index) {
+    return internal[static_cast<typename T::size_type>(index)];
+  }
+
+  // For when the view is constant
+  constexpr const T &operator[](Index index) const {
+    return internal[static_cast<typename T::size_type>(index)];
+  }
+};
+
 int main() {
   // Some simple
   // container things

@@ -60,5 +60,29 @@ int main() {
 
   display_vector(ones);
 
+  // for-each pattern, im assuming this is
+  // iterator backed like in Rust
+
+  // In this example, each element is copied
+  // into ele. probably not good
+  for (int ele : ones) {
+    // Do Something
+  }
+
+  // Same idea, however now we
+  // are iterating over references
+  // to each element. This is kind of similar
+  // to Rust &vec vs vec when iterating,
+  // but the enlightened language actually takes and moves
+  // the iterated data instead of copying automatically
+  for (int &ele : ones) {
+    // Do something
+  }
+
+  // and const as well
+  for (const int &ele : ones) {
+    // Do something
+  }
+
   return 0;
 }

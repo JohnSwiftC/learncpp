@@ -1,3 +1,4 @@
+#include "badvec.h"
 #include <iostream>
 #include <new>
 
@@ -32,6 +33,20 @@ int main() {
 
   // for deleting, we need the delete[] operator
   delete[] arr;
+
+  badvec<int> my_vec(10);
+
+  my_vec[9] = 12;
+
+  std::cout << my_vec[9] << '\n';
+
+  my_vec.push(2);
+  my_vec.push(4);
+  my_vec.push(8);
+
+  std::cout << my_vec.pop() << '\n';
+  std::cout << my_vec.pop() << '\n';
+  std::cout << my_vec.pop() << '\n';
 
   return 0;
 }

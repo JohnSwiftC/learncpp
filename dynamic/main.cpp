@@ -44,9 +44,5 @@ int main() {
   my_vec.push(4);
   my_vec.push(8);
 
-  std::cout << my_vec.pop() << '\n';
-  std::cout << my_vec.pop() << '\n';
-  std::cout << my_vec.pop() << '\n';
-
   return 0;
 }

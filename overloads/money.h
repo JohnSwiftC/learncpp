@@ -14,7 +14,7 @@ public:
   // Declare the operator as a friend function so it
   // can access the private member fields
   friend Money operator+(const Money &a, const Money &b);
-  friend std::ostream &operator<<(const std::ostream &out, const Money &in) {}
+  friend std::ostream &operator<<(std::ostream &out, const Money &in);
 };
 
 #endif

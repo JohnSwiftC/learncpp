@@ -1,4 +1,5 @@
 #include "money.h"
+#include <ostream>
 
 Money operator+(const Money &a, const Money &b) {
   int dollars = a.m_dollars + b.m_dollars;
@@ -6,4 +7,10 @@ Money operator+(const Money &a, const Money &b) {
   int cents = (a.m_cents + b.m_cents) % 100;
 
   return Money{dollars + new_dollars, cents};
+}
+
+std::ostream &operator<<(std::ostream &out, const Money &in) {
+  out << "$" << in.m_dollars << "." << in.m_cents;
+
+  return out;
 }

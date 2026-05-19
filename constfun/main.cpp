@@ -4,7 +4,10 @@
 // is a pattern using const casting
 // to stop reusing code between const and
 // non const functions.
+//
+// Also index validation
 
+#include <cassert>
 #include <cstddef>
 #include <utility>
 class MyList {
@@ -17,7 +20,12 @@ public:
   // Our const implementation for indexing
   // we dont want to rewrite any complex logic we have
   // in such a const function
-  const int &operator[](Index index) const { return data[index]; }
+  const int &operator[](Index index) const {
+
+    assert(index >= 0 && static_cast<std::size_t>(index) < std::size(data));
+
+    return data[index];
+  }
 
   int &operator[](Index index) {
     // Can use std::as_const to convert *this to const,
@@ -40,6 +48,8 @@ int main() {
   list[0] = 10;
 
   std::cout << list[0] << '\n';
+
+  list[10];
 
   return 0;
 }

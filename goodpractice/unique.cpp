@@ -1,6 +1,9 @@
+#include <cstddef>
+#include <initializer_list>
 #include <iostream>
 #include <memory>
 #include <ostream>
+#include <utility>
 
 class Vector3D {
 private:
@@ -34,6 +37,29 @@ public:
         m_third{std::move(third)} {}
 };
 
+class MyArray {
+private:
+  std::size_t m_size;
+  std::unique_ptr<int[]> m_data;
+
+public:
+  explicit MyArray(std::size_t size)
+      : m_size{size}, m_data{std::make_unique<int[]>(size)} {}
+
+  // Takes an initializer_list, delegates to the first constructor based on
+  // size, and then copies the elements of the initializer over
+  MyArray(std::initializer_list<int> list) : MyArray(list.size()) {
+    std::copy(list.begin(), list.end(), m_data.get());
+  }
+
+  const int &operator[](std::ptrdiff_t index) const { return m_data[index]; }
+  int &operator[](std::ptrdiff_t index) {
+    return const_cast<int &>(std::as_const(*this)[index]);
+  }
+
+  std::size_t size() const { return m_size; }
+};
+
 int main() {
 
   // new is not good practice.
@@ -56,6 +82,14 @@ int main() {
   // the whole point of unique_ptr is that it's delete constructor
   // handles deletion for you, so when tri is deleted, the underlying
   // memory for the allocated points will also be deleted
+
+  MyArray arr{1, 2, 3, 4, 5};
+
+  std::size_t n = arr.size();
+
+  for (std::size_t i{0}; i < n; ++i) {
+    std::cout << arr[i] << '\n';
+  }
 
   return 0;
 }

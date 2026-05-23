@@ -45,9 +45,17 @@ int main() {
   std::unique_ptr<Vector3D> point2{std::make_unique<Vector3D>(2.0, 10.0, 12.0)};
   std::unique_ptr<Vector3D> point3{std::make_unique<Vector3D>(3.0, 3.0, 1.0)};
 
+  if (point1) {
+    std::cout << *point1 << '\n';
+  }
+
   // std::move must also be used in the constructor,
   // for the same reasons as above
   Triangle tri{std::move(point1), std::move(point2), std::move(point3)};
+
+  // the whole point of unique_ptr is that it's delete constructor
+  // handles deletion for you, so when tri is deleted, the underlying
+  // memory for the allocated points will also be deleted
 
   return 0;
 }

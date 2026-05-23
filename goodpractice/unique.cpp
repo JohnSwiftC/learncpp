@@ -45,5 +45,9 @@ int main() {
   std::unique_ptr<Vector3D> point2{std::make_unique<Vector3D>(2.0, 10.0, 12.0)};
   std::unique_ptr<Vector3D> point3{std::make_unique<Vector3D>(3.0, 3.0, 1.0)};
 
+  // std::move must also be used in the constructor,
+  // for the same reasons as above
+  Triangle tri{std::move(point1), std::move(point2), std::move(point3)};
+
   return 0;
 }

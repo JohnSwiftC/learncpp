@@ -52,6 +52,12 @@ public:
     std::copy(list.begin(), list.end(), m_data.get());
   }
 
+  // Contains a unique_ptr, so
+  // its good to explicity delete the
+  // copy constructors
+  MyArray &operator=(const MyArray &) = delete;
+  MyArray(const MyArray &) = delete;
+
   const int &operator[](std::ptrdiff_t index) const { return m_data[index]; }
   int &operator[](std::ptrdiff_t index) {
     return const_cast<int &>(std::as_const(*this)[index]);

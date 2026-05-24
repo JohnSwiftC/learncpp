@@ -48,5 +48,9 @@ int main(int argc, char **argv) {
     std::cout << arr[i] << '\n';
   }
 
+  // Because unique_ptr deletes the copy
+  // constructors, Array does as well
+  // Array<int> arr2 = arr;
+
   return 0;
 }

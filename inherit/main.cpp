@@ -1,4 +1,5 @@
 #include <cstddef>
+#include <initializer_list>
 #include <iostream>
 #include <memory>
 
@@ -19,4 +20,10 @@ public:
   std::unique_ptr<T[]> m_data;
   Vector(std::size_t size)
       : Container{size}, m_data{std::make_unique<T[]>(size)} {}
+
+  Vector(std::initializer_list<T> list)
+      : Vector(list.size()), m_data{std::make_unique<T[]>(m_size)} {
+
+    std::copy(list.begin(), list.end(), m_data.get());
+  }
 };

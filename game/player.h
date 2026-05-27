@@ -1,9 +1,10 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "room.h"
 #include <iosfwd>
 #include <memory>
+
+class Room;
 
 class Player {
 private:
@@ -12,6 +13,8 @@ private:
 
 public:
   Player(Room *room);
+  int getCoins() const;
+  void setCoins(int coins);
 
   friend std::ostream &operator<<(std::ostream &out, const Player &in);
 };

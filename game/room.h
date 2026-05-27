@@ -16,6 +16,8 @@ public:
   std::string_view getDesc() const;
 
   virtual void actOnPlayer(Player &player) = 0;
+
+  virtual ~Room() = default;
 };
 
 class MainRoom : public Room {

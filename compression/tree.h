@@ -5,15 +5,17 @@
 #include <memory>
 
 struct Tree {
-  std::byte m_val;
+  char m_val;
   int m_count;
   std::unique_ptr<Tree> left;
   std::unique_ptr<Tree> right;
 
-  Tree(std::byte val);
-  Tree(std::byte val, int count);
+  Tree(int count);
+  Tree(char val, int count);
 
   void insert(std::unique_ptr<Tree> other);
+
+  friend void print_preorder(Tree *root);
 };
 
 #endif

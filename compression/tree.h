@@ -12,8 +12,14 @@ struct Tree {
 
   Tree(int count);
   Tree(char val, int count);
+  Tree(std::unique_ptr<Tree> left, std::unique_ptr<Tree> right);
 
   void insert(std::unique_ptr<Tree> other);
+
+  bool is_leaf() const;
+
+  friend std::unique_ptr<Tree> merge(std::unique_ptr<Tree> left,
+                                     std::unique_ptr<Tree> right);
 
   friend void print_preorder(Tree *root);
 };

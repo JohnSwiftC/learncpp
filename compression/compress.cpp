@@ -1,8 +1,10 @@
 #include "tree.h"
 
+#include <cstddef>
 #include <fstream>
 #include <iostream>
 #include <memory>
+#include <queue>
 
 struct CompareTree {
   bool operator()(const std::unique_ptr<Tree> &a,
@@ -32,9 +34,31 @@ int main(int argc, char *argv[]) {
     counts[static_cast<unsigned char>(byte)]++;
   }
 
-  for (int i{0}; i < 256; ++i) {
-    std::cout << static_cast<unsigned char>(i) << ": " << counts[i] << '\n';
+  std::priority_queue<std::unique_ptr<Tree>, std::vector<std::unique_ptr<Tree>>,
+                      CompareTree>
+      queue;
+
+  for (size_t i{0}; i < 256; ++i) {
+    if (counts[i] != 0) {
+      queue.push(std::make_unique<Tree>(static_cast<char>(i), counts[i]));
+    }
   }
+
+  while (queue.size() != 1) {
+    auto first = std::move(const_cast<std::unique_ptr<Tree> &>(queue.top()));
+    queue.pop();
+    auto second = std::move(const_cast<std::unique_ptr<Tree> &>(queue.top()));
+    queue.pop();
+
+    auto merged = merge(std::move(first), std::move(second));
+
+    queue.push(std::move(merged));
+  }
+
+  auto final_tree = std::move(const_cast<std::unique_ptr<Tree> &>(queue.top()));
+  queue.pop();
+
+  print_preorder(final_tree.get());
 
   return 0;
 }

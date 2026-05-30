@@ -5,7 +5,7 @@
 #include <memory>
 
 struct Tree {
-  char m_val;
+  char m_val{};
   int m_count;
   std::unique_ptr<Tree> left;
   std::unique_ptr<Tree> right;

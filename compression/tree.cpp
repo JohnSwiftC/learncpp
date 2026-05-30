@@ -50,7 +50,9 @@ void print_preorder(Tree *root) {
     return;
   }
 
-  std::cout << root->m_val;
+  if (root->is_leaf()) {
+    std::cout << root->m_val;
+  }
   print_preorder(root->left.get());
   print_preorder(root->right.get());
 }

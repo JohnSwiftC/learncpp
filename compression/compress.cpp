@@ -41,6 +41,22 @@ private:
   int m_nbits{0};
 };
 
+// Preorder tree layout: each internal node is a single 0 bit, each leaf is a
+// 1 bit followed by its 8-bit byte value. decompress.cpp reverses this.
+void serialize_tree(const Tree *node, BitWriter &writer) {
+  if (node->is_leaf()) {
+    writer.put_bit(1);
+    unsigned char val{static_cast<unsigned char>(node->m_val)};
+    for (int i = 7; i >= 0; --i) {
+      writer.put_bit((val >> i) & 1);
+    }
+  } else {
+    writer.put_bit(0);
+    serialize_tree(node->left.get(), writer);
+    serialize_tree(node->right.get(), writer);
+  }
+}
+
 int main(int argc, char *argv[]) {
   if (argc != 2) {
     std::cerr << "Error: only accepts a file path argument!";
@@ -88,14 +104,12 @@ int main(int argc, char *argv[]) {
 
   auto codes = build_codes(final_tree.get());
 
-  long long total_bits{0};
+  // Number of symbols in the original file; decompress.cpp decodes exactly
+  // this many and ignores any trailing pad bits, so no padding byte is needed.
+  unsigned long long symbol_count{0};
   for (size_t i{0}; i < 256; ++i) {
-    if (counts[i] != 0) {
-      total_bits += static_cast<long long>(counts[i]) *
-                    codes[static_cast<char>(i)].size();
-    }
+    symbol_count += static_cast<unsigned long long>(counts[i]);
   }
-  unsigned char padding{static_cast<unsigned char>((8 - total_bits % 8) % 8)};
 
   std::ofstream output(file_path + ".huf", std::ios::binary);
   if (!output.is_open()) {
@@ -103,14 +117,19 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  // Header (minimal for now): one byte recording the padding in the last byte.
-  output.put(static_cast<char>(padding));
+  // Header: 8-byte big-endian symbol count.
+  for (int i = 7; i >= 0; --i) {
+    output.put(static_cast<char>((symbol_count >> (i * 8)) & 0xFF));
+  }
+
+  // Then a single bitstream: serialized tree followed by the encoded data.
+  BitWriter writer(output);
+  serialize_tree(final_tree.get(), writer);
 
   // Rewind the input and emit each byte's code as packed bits.
   input.clear();
   input.seekg(0);
 
-  BitWriter writer(output);
   while (input.get(byte)) {
     const std::string &code{codes[byte]};
     for (char bit : code) {

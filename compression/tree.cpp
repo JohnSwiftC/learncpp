@@ -45,6 +45,28 @@ std::unique_ptr<Tree> merge(std::unique_ptr<Tree> left,
   return std::make_unique<Tree>(std::move(right), std::move(left));
 }
 
+void build_codes(const Tree *root, std::string prefix,
+                 std::unordered_map<char, std::string> &codes) {
+  if (!root) {
+    return;
+  }
+
+  if (root->is_leaf()) {
+    // A lone leaf (single-symbol input) has an empty prefix; give it "0".
+    codes[root->m_val] = prefix.empty() ? "0" : prefix;
+    return;
+  }
+
+  build_codes(root->left.get(), prefix + '0', codes);
+  build_codes(root->right.get(), prefix + '1', codes);
+}
+
+std::unordered_map<char, std::string> build_codes(const Tree *root) {
+  std::unordered_map<char, std::string> codes;
+  build_codes(root, "", codes);
+  return codes;
+}
+
 void print_preorder(Tree *root) {
   if (!root) {
     return;

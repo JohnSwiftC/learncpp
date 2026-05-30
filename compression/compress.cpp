@@ -13,6 +13,34 @@ struct CompareTree {
   }
 };
 
+class BitWriter {
+public:
+  BitWriter(std::ostream &out) : m_out{out} {}
+
+  void put_bit(int bit) {
+    m_buffer = static_cast<unsigned char>((m_buffer << 1) | (bit & 1));
+    if (++m_nbits == 8) {
+      m_out.put(static_cast<char>(m_buffer));
+      m_buffer = 0;
+      m_nbits = 0;
+    }
+  }
+
+  void flush() {
+    if (m_nbits > 0) {
+      m_buffer = static_cast<unsigned char>(m_buffer << (8 - m_nbits));
+      m_out.put(static_cast<char>(m_buffer));
+      m_buffer = 0;
+      m_nbits = 0;
+    }
+  }
+
+private:
+  std::ostream &m_out;
+  unsigned char m_buffer{0};
+  int m_nbits{0};
+};
+
 int main(int argc, char *argv[]) {
   if (argc != 2) {
     std::cerr << "Error: only accepts a file path argument!";
@@ -58,7 +86,38 @@ int main(int argc, char *argv[]) {
   auto final_tree = std::move(const_cast<std::unique_ptr<Tree> &>(queue.top()));
   queue.pop();
 
-  print_preorder(final_tree.get());
+  auto codes = build_codes(final_tree.get());
+
+  long long total_bits{0};
+  for (size_t i{0}; i < 256; ++i) {
+    if (counts[i] != 0) {
+      total_bits += static_cast<long long>(counts[i]) *
+                    codes[static_cast<char>(i)].size();
+    }
+  }
+  unsigned char padding{static_cast<unsigned char>((8 - total_bits % 8) % 8)};
+
+  std::ofstream output(file_path + ".huf", std::ios::binary);
+  if (!output.is_open()) {
+    std::cerr << "Failed to open output file\n";
+    return 1;
+  }
+
+  // Header (minimal for now): one byte recording the padding in the last byte.
+  output.put(static_cast<char>(padding));
+
+  // Rewind the input and emit each byte's code as packed bits.
+  input.clear();
+  input.seekg(0);
+
+  BitWriter writer(output);
+  while (input.get(byte)) {
+    const std::string &code{codes[byte]};
+    for (char bit : code) {
+      writer.put_bit(bit == '1' ? 1 : 0);
+    }
+  }
+  writer.flush();
 
   return 0;
 }

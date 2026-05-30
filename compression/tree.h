@@ -3,6 +3,8 @@
 
 #include <cstddef>
 #include <memory>
+#include <string>
+#include <unordered_map>
 
 struct Tree {
   char m_val{};
@@ -22,6 +24,11 @@ struct Tree {
                                      std::unique_ptr<Tree> right);
 
   friend void print_preorder(Tree *root);
+
+  friend void build_codes(const Tree *root, std::string prefix,
+                          std::unordered_map<char, std::string> &codes);
 };
+
+std::unordered_map<char, std::string> build_codes(const Tree *root);
 
 #endif

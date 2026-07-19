@@ -72,6 +72,16 @@ template <typename T> bool checker() {
   }
 }
 
+// this is some bs lol. since c++20, concepts are a thing
+// they are very loosely like trait bounds in rust. lets say
+// we want to write a template that only accepts types with some
+// specific capability, like being cool.
+
+template <typename T>
+concept IsCool = is_cool<T>::value;
+
+template <IsCool T> void hmm() {}
+
 int main() {
 
   std::cout << Fib<10>::value << '\n';
@@ -86,6 +96,15 @@ int main() {
   std::cout << checker<Jeff>() << '\n';
   std::cout << checker<John>() << '\n';
   std::cout << checker<Bill>() << '\n';
+
+  // below will not compile,
+  // because int is not cool.
+  // the nice part is the error message
+  // is very clear and readable.
+  // hmm<int>();
+
+  // compiles just fine
+  hmm<John>();
 
   return 0;
 }

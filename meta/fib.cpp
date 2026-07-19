@@ -1,4 +1,5 @@
 #include <iostream>
+#include <type_traits>
 
 // my eyes have been opened
 
@@ -41,6 +42,36 @@ template <typename T> struct is_pointer<T *> {
   static constexpr bool value = true;
 };
 
+// in the real world, these would use
+// the standard library, and these are
+// used to allow templates to make decisions
+
+template <typename T> struct is_cool : std::false_type {};
+
+struct Jeff;
+struct John;
+struct Bill;
+
+template <> struct is_cool<John> : std::true_type {};
+template <> struct is_cool<Bill> : std::true_type {};
+
+// then use these in for example a templated function
+// here you might want to check for a specific
+// trait which may require things are done differently
+// depending in the type
+//
+// also note the if constexpr. used here because
+// is cool is just a template trait which will be known
+// always at compile time
+
+template <typename T> bool checker() {
+  if constexpr (is_cool<T>::value) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
 int main() {
 
   std::cout << Fib<10>::value << '\n';
@@ -48,7 +79,13 @@ int main() {
   std::cout << factorial(10) << '\n';
 
   std::cout << is_pointer<int>::value << '\n';
-  std::cout << is_pointer<char *>::value << '\n';
+  std::cout << is_pointer<char *>::value << "\n\n";
+
+  // false, true, true
+
+  std::cout << checker<Jeff>() << '\n';
+  std::cout << checker<John>() << '\n';
+  std::cout << checker<Bill>() << '\n';
 
   return 0;
 }
